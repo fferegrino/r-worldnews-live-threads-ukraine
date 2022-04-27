@@ -1,0 +1,73 @@
+{
+  "title": "/r/WorldNews: Russian Invasion of Ukraine",
+  "subtitle": "Redditors' comments on the news of the Russian invasion of Ukraine",
+  "description": "On the 14 of february the mods of r/worldnews started creating \"live\" threads to aggregate all the comments related to what was then catalogued as the \"*Ukraine-Russia Tensions*\", over time the interest in these threads (measured in terms of how many comments they accure) has varied as the conflict advances.\n\nThis dataset aims to capture all the comments user have made so far in these threads, useful if you want to examine how the discourse around the war has been evolving, or if you have an interest on seeing which comments get upvoted the most, or simply want to toy around with some dataset that contains categorical, numeric and text data.",
+  "id": "ioexception/rworldnews-russian-invasion-of-ukraine",
+  "licenses": [{"name": "Reddit API Terms"}],
+  "resources": [
+    {
+      "path": "threads.csv",
+      "description": "All the threads related to the Russian Invasion of Ukraine.",
+      "schema": {
+        "fields": [
+          {
+            "name": "id",
+            "description": "A unique identifier for the thread",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "description": "Another unique identifier for the thread",
+            "type": "string"
+          },
+          {
+            "name": "author",
+            "description": "A hashed version of the poster's username",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "description": "The original title of the thread",
+            "type": "string"
+          },
+          {
+            "name": "created_utc",
+            "description": "An epoch timestamp of when the thread was posted",
+            "type": "number"
+          },
+          {
+            "name": "created_at",
+            "description": "The date you get when converting `created_utc` to a datetime",
+            "type": "date"
+          },
+          {
+            "name": "num_comments",
+            "description": "The number of comments as reported by the Reddit API",
+            "type": "number"
+          },
+          {
+            "name": "score",
+            "description": "The score of the thread",
+            "type": "number"
+          },
+          {
+            "name": "upvote_ratio",
+            "description": "The ratio between upvotes and downvotes",
+            "type": "number"
+          },
+          {
+            "name": "permalink",
+            "description": "A permanent identifier to the thread",
+            "type": "number"
+          }
+        ]
+      }
+    }
+  ],
+  "keywords": [
+    "News",
+    "Social Networks",
+    "Economics",
+    "Politics"
+  ]
+}

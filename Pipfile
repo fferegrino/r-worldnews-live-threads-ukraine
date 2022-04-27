@@ -9,6 +9,7 @@ pandas = "*"
 jupyter = "*"
 jupyterlab = "*"
 matplotlib = "*"
+kaggle = "*"
 
 [dev-packages]
 isort = "*"
