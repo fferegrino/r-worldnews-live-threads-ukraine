@@ -1,7 +1,5 @@
 import datetime
 import json
-import os
-import shutil
 from pathlib import Path
 
 from kaggle import api
@@ -47,12 +45,7 @@ def prepare_metadata():
         json.dump(dataset_metadata, w, indent=4)
 
 
-if not os.path.exists("kaggle"):
-    os.mkdir("kaggle")
-
 prepare_metadata()
-
-shutil.make_archive("./kaggle/data", "zip", "./data")
 
 
 update_time = datetime.datetime.utcnow().strftime("%B %d %Y - %H:%M:%S")

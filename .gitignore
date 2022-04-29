@@ -13,4 +13,4 @@ __pycache__/
 .DS_Store
 
 worldnews.png
-kaggle/
+data/dataset-metadata.json
