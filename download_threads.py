@@ -35,6 +35,10 @@ import praw
 # There are a couple ways to download data from the internet web scraping or APIs (when available): web scraping is my favourite, but at the same time the most time consuming and fragile to maintain since any change to the layout makes your scraping go wild. Luckily for us Reddit offers an API one can use to consume data from the site.
 #
 # As with most major websites APIs, to start using this api, one needs to [register an application](https://www.reddit.com/prefs/apps/) – my recommendation is that you create an entirely different Reddit account since you will also have to use the password of said account to authenticate.
+#
+# When your app has been created, make note of the following values as we will use them too:
+#
+# ![Reddit secrets to keep track of](https://ik.imagekit.io/thatcsharpguy/posts/worldnews/created.png?ik-sdk-version=javascript-1.4.3&updatedAt=1651313287355)
 
 # %% [markdown]
 # ### PRAW to use the Reddit API

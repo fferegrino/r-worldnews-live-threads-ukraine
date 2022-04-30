@@ -204,6 +204,8 @@ line_plot()
 
 
 # %% [markdown]
+# ![First version](https://ik.imagekit.io/thatcsharpguy/posts/worldnews/first-version.png?ik-sdk-version=javascript-1.4.3&updatedAt=1651313288116)
+#
 # Not bad, but can be improved further!
 
 # %% [markdown]
@@ -246,6 +248,8 @@ add_ticks(ax)
 
 
 # %% [markdown]
+# ![Second version](https://ik.imagekit.io/thatcsharpguy/posts/worldnews/second-version.png?ik-sdk-version=javascript-1.4.3&updatedAt=1651313288116)
+#
 # Minor improvement, if you ask me!
 
 # %% [markdown]
@@ -275,6 +279,8 @@ add_legends(ax, window)
 
 
 # %% [markdown]
+# ![Third version](https://ik.imagekit.io/thatcsharpguy/posts/worldnews/third-version.png?ik-sdk-version=javascript-1.4.3&updatedAt=1651313288116)
+#
 # Now people know what the plot is about! we are still not there, but we are getting close.
 
 # %% [markdown]
@@ -308,6 +314,9 @@ add_highlighted_events(ax, major_events)
 
 
 # %% [markdown]
+# ![Fourth version](https://ik.imagekit.io/thatcsharpguy/posts/worldnews/fourth-version.png?ik-sdk-version=javascript-1.4.3&updatedAt=1651313288116)
+
+# %% [markdown]
 # #### More colors
 #
 # In the `add_final_touches` you will find that I am adding a `grid` so that there is a subtle distinction across days. Set the background color of the plot to a light yellow and the overall background of our graphic to white.
@@ -328,7 +337,9 @@ add_highlighted_events(ax, major_events)
 add_final_touches(fig, ax)
 
 # %% [markdown]
-# Then we can save the figure
+# ![Fifth version](https://ik.imagekit.io/thatcsharpguy/posts/worldnews/fifth-version.png?ik-sdk-version=javascript-1.4.3&updatedAt=1651313288116)
+#
+# Then we can save the figure:
 
 # %%
 fig.savefig("worldnews.png")
@@ -372,6 +383,9 @@ ax.annotate(
 )
 
 fig.savefig("worldnews.png")
+
+# %% [markdown]
+# ![Sixth and final version](https://ik.imagekit.io/thatcsharpguy/posts/worldnews/sixth-version.png?ik-sdk-version=javascript-1.4.3&updatedAt=1651313288116)
 
 # %% [markdown]
 # ## Conclusion
