@@ -14,17 +14,15 @@
 
 # %% _uuid="8f2839f25d086af736a60e9eeb907d3b93b6e0e5" _cell_guid="b1076dfc-b9ad-4769-8c92-a6c4dae69d19"
 from datetime import datetime, timedelta
-from glob import glob
 
 import matplotlib as mpl
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
 import numpy as np
 import pandas as pd
 import pytz
 from matplotlib.offsetbox import AnchoredText
-
-import matplotlib.ticker as mticker
 
 # %% [markdown]
 # ## Reading the thread files
@@ -33,7 +31,7 @@ import matplotlib.ticker as mticker
 #
 #  - The *threads.csv* file and,
 #  - The *comments/comments_[THREAD_ID].csv* files
-#  
+#
 # The first group is a single file that contains some high-level information that acts as an aggregator for the rest of the files. In this file one can find the name, author, title, creation date, score and number of comments of each one of the *live threads* related to the invasion.
 
 # %%
@@ -49,13 +47,13 @@ threads.head(2)
 
 # %%
 file = "data/comments/comments__st8lq0.csv"
-comments = pd.read_csv(file, lineterminator='\n')
+comments = pd.read_csv(file, lineterminator="\n")
 comments.head(2)
 
 # %% [markdown]
 # ## Plotting the frequency of comments
 #
-# Now that we learned what the files contain and how to read them, let's do something cool with them. Let's see how the interest over the thread has changed over time by counting the number of comments per hour. 
+# Now that we learned what the files contain and how to read them, let's do something cool with them. Let's see how the interest over the thread has changed over time by counting the number of comments per hour.
 #
 # The overall process is as follows:
 #
@@ -71,7 +69,7 @@ comments.head(2)
 
 # %%
 created_dates = []
-for thread_id in threads['id']:
+for thread_id in threads["id"]:
     comments_file = f"data/comments/comments__{thread_id}.csv"
     data = pd.read_csv(comments_file, lineterminator="\n", usecols=["created_utc"])
     created_dates.append(data["created_utc"].values)
@@ -88,7 +86,7 @@ created_dates = np.concatenate(created_dates)
 
 # %%
 # Helper date functions
-INTERVAL = 3600 # 1 hour in seconds
+INTERVAL = 3600  # 1 hour in seconds
 
 
 def lower_bound(ts):
@@ -119,10 +117,10 @@ print(f"{lower} is the lower bound of {actual_date} and its upper bound is {uppe
 
 # %%
 bin_edges = np.arange(
-    start = lower_bound(min(created_dates)), 
-    stop = upper_bound(max(created_dates)) + 1,
-    step = INTERVAL,
-    dtype = int,
+    start=lower_bound(min(created_dates)),
+    stop=upper_bound(max(created_dates)) + 1,
+    step=INTERVAL,
+    dtype=int,
 )
 
 # %% [markdown]
@@ -151,7 +149,7 @@ window = (begining, end)
 # To make our task easy, let's turn our values and edges into a pandas Series:
 
 # %%
-comments_histogram = pd.Series(data= values, index=pd.to_datetime(bin_edges[:-1], unit='s'))
+comments_histogram = pd.Series(data=values, index=pd.to_datetime(bin_edges[:-1], unit="s"))
 
 # %% [markdown]
 # #### Important events
@@ -162,18 +160,9 @@ comments_histogram = pd.Series(data= values, index=pd.to_datetime(bin_edges[:-1]
 
 # %%
 major_events = [
-    (
-        datetime(2022, 2, 21, 19, 35),
-        "Russia recognizes the\nindependence of\nbreakaway regions",
-    ),
-    (
-        datetime(2022, 2, 24, 3, 0),
-        'Putin announces the\n"special military operation"\nin Ukraine',
-    ),
-    (
-        datetime(2022, 3, 16, 16, 0),
-        "Chernihiv breadline massacre\n and Mariupol theatre airstrike",
-    ),
+    (datetime(2022, 2, 21, 19, 35), "Russia recognizes the\nindependence of\nbreakaway regions"),
+    (datetime(2022, 2, 24, 3, 0), 'Putin announces the\n"special military operation"\nin Ukraine'),
+    (datetime(2022, 3, 16, 16, 0), "Chernihiv breadline massacre\n and Mariupol theatre airstrike"),
     (datetime(2022, 4, 3, 17, 42), "Discovery of the\nBucha massacre"),
     (datetime(2022, 4, 13, 17, 42, 42), "Sinking of the Moskva"),
     (datetime(2022, 4, 28, 6, 49), "US Government approves\nLend-lease for Ukraine"),
@@ -207,8 +196,9 @@ def line_plot():
     fig = plt.figure(figsize=(25, 7), dpi=120)
     ax = fig.gca()
     ax.plot(comments_histogram.index, comments_histogram, color="#005BBB")
-    
+
     return fig, ax
+
 
 line_plot()
 
@@ -219,15 +209,15 @@ line_plot()
 # %% [markdown]
 # #### Improving our ticks with locators and formatters
 #
-# The first thing I'd like to address is the fact that the visual references in terms of days and comment count look very sparse. Given that these are daily observations, I find it may be helpful to show this information on the graph. 
+# The first thing I'd like to address is the fact that the visual references in terms of days and comment count look very sparse. Given that these are daily observations, I find it may be helpful to show this information on the graph.
 #
 # Turns out, *matplotlib* has some great utilities we can employ when working with dates within the `matplotlib.dates` package.
 #
 # The function `add_ticks` is divided in 4 blocks:
 #
-#  1. Set the minor ticks in the X-axis, using `DayLocator` and `DateFormatter` to set a minor marker every day  
-#  2. Set the major ticks in the X-axis, using a `MonthLocator` and `DateForamtter` to set a major marker every month  
-#  3. Set the formatting in the Y-axis, this one is a bit more convoluted since we need to "manually" set the ticks reading the original ones with `FixedLocator`, then use a `FuncFormatter` (and a lambda function) to specify the new formatting.  
+#  1. Set the minor ticks in the X-axis, using `DayLocator` and `DateFormatter` to set a minor marker every day
+#  2. Set the major ticks in the X-axis, using a `MonthLocator` and `DateForamtter` to set a major marker every month
+#  3. Set the formatting in the Y-axis, this one is a bit more convoluted since we need to "manually" set the ticks reading the original ones with `FixedLocator`, then use a `FuncFormatter` (and a lambda function) to specify the new formatting.
 #  4. Set some additional styles to make the major ticks stand out from the minor ones.
 
 # %%
@@ -237,7 +227,7 @@ def add_ticks(axes):
     minor_formatter = mdates.DateFormatter("%d")
     axes.xaxis.set_minor_locator(minor_locator)
     axes.xaxis.set_minor_formatter(minor_formatter)
-    
+
     major_locator = mdates.MonthLocator(interval=1)
     major_formatter = mdates.DateFormatter("%b")
     axes.xaxis.set_major_locator(major_locator)
@@ -246,10 +236,11 @@ def add_ticks(axes):
     ticks_loc = axes.get_yticks()
     axes.yaxis.set_major_locator(mticker.FixedLocator(ticks_loc))
     axes.yaxis.set_major_formatter(mticker.FuncFormatter(lambda val, pos: f"{int(val / 1000)}K"))
-    
+
     ax.tick_params(axis="x", which="major", length=20)
     ax.tick_params(which="major", labelsize=15)
-    
+
+
 fig, ax = line_plot()
 add_ticks(ax)
 
@@ -262,20 +253,21 @@ add_ticks(ax)
 #
 # An unlabeled plot is a crappy plot, guided by this principle let's add the `add_legends` function divided in two blocks:
 #
-#  - It sets the limits of what the plot shows, here is were we use the `window` defined above, and also set the starting point in the Y-axis to 0. 
+#  - It sets the limits of what the plot shows, here is were we use the `window` defined above, and also set the starting point in the Y-axis to 0.
 #  - It sets all the labels and credit to the plot
 
 # %%
 def add_legends(axes, window):
-    
+
     axes.set_ylim(ymin=0)
     axes.set_xlim(window)
-    
+
     axes.set_title("r/WorldNews interest over the Russian Invasion of Ukraine")
     axes.set_xlabel("Day")
     axes.set_ylabel("Hourly comments")
     credit = f"u/fferegrino - comments from r/worldnews live threads"
     axes.add_artist(AnchoredText(credit, loc=1, frameon=True))
+
 
 fig, ax = line_plot()
 add_ticks(ax)
@@ -298,7 +290,7 @@ def add_highlighted_events(axes, events):
         xy = (event_utc_date, arrow_tip_location)
         xy_text = (event_utc_date - timedelta(days=0.6), arrow_tip_location + 4_000)
         arrow_props = dict(arrowstyle="-|>", facecolor="black")
-        
+
         axes.annotate(
             title,
             xy=xy,
@@ -307,6 +299,7 @@ def add_highlighted_events(axes, events):
             arrowprops=arrow_props,
             fontsize=15,
         )
+
 
 fig, ax = line_plot()
 add_ticks(ax)
@@ -326,7 +319,7 @@ def add_final_touches(figure, axes):
     axes.set_facecolor("#FFF7CC")
     figure.patch.set_facecolor("white")
     figure.tight_layout()
-    
+
 
 fig, ax = line_plot()
 add_ticks(ax)
@@ -355,8 +348,8 @@ fig.savefig("worldnews.png")
 # And
 #
 #  > New thread already? – [*permalink*](https://www.reddit.com/r/worldnews/comments/t1rnuj/rworldnews_live_thread_russian_invasion_of/hyhpn5g/?utm_source=reddit&utm_medium=web2x&context=3)
-#  >> Wrong day on the last one  
-#  
+#  >> Wrong day on the last one
+#
 # Let's add another note to our plot so that people does not get confused:
 #
 
