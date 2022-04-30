@@ -23,27 +23,27 @@ import praw
 # %% [markdown]
 # ## Motivation
 #
-# Feel free to skip this section.
+# Ever since Russia's "special military operation" in Ukraine started, I have been doomscrolling the comments in the [r/worldnews subreddit](https://www.reddit.com/r/worldnews) live threads. I saw with amusement how the frequency of comments increased with each major event but also noticed how each day there were fewer and fewer comments showing a sustained decrease of interest (at least when measured by Reddit comments) on the topic of the invasion.
 #
-# Ever since Russia's the "special military operation" in Ukraine started, I have been doomscrolling the comments in the [r/worldnews subreddit](https://www.reddit.com/r/worldnews) live threads. I saw with amusement how the frequency of comments "increased" with each major event but also noticed how each day there were less and less comments showing a sustained decrease of interest (at least when meassured by reddit comments) on the topic of the invasion.
-#
-# This led me to find all the live threads in an attempt to figure out whether my feeling was true or not. The following two posts are a result of this curiosity, in the first one (the one you are reading now) I'll show you how I created the dataset whereas in the second one you will find how to use the data.
+# This prompted me to find all the live threads in an attempt to figure out whether my feeling was true or not. The following two posts are a result of this curiosity; in the first one (the one you are reading now) I'll show you how I created the dataset, whereas in the second one, you will find how to use the data.
 
 # %% [markdown]
 # ## The Reddit API
 #
-# There are a couple ways to download data from the internet web scraping or APIs (when available): web scraping is my favourite, but at the same time the most time consuming and fragile to maintain since any change to the layout makes your scraping go wild. Luckily for us Reddit offers an API one can use to consume data from the site.
+# There are a couple of ways to download data from the internet web scraping or APIs (when available): web scraping is my favourite, but at the same time, the most time consuming and fragile to maintain since any change to the layout makes your scraping go wild.
 #
-# As with most major websites APIs, to start using this api, one needs to [register an application](https://www.reddit.com/prefs/apps/) – my recommendation is that you create an entirely different Reddit account since you will also have to use the password of said account to authenticate.
+# Luckily for us, Reddit offers an API one can use to consume data from the site.
 #
-# When your app has been created, make note of the following values as we will use them too:
+# As with most major websites APIs, to start using this api, one needs to [register an application](https://www.reddit.com/prefs/apps/) - my recommendation is that you create an entirely different Reddit account since you will also have to use the password of said account to authenticate.
+#
+# When your app has been created, make a note of the following values as we will use them too:
 #
 # ![Reddit secrets to keep track of](https://ik.imagekit.io/thatcsharpguy/posts/worldnews/created.png?ik-sdk-version=javascript-1.4.3&updatedAt=1651313287355)
 
 # %% [markdown]
 # ### PRAW to use the Reddit API
 #
-# To consume the API via Python, we will be using the PRAW package.
+# To consume the API via Python, we will be using the PRAW package. Installable using Python with `pip install praw`.
 #
 # Once we have got our client id and secret we can move on to create a `praw.Reddit` instance passing the information we just got from Reddit; to avoid hardcoding our password and secrets let's use environment variables to set these values:
 
@@ -70,7 +70,7 @@ def hash_string(content):
 # %% [markdown]
 # ## Finding all the threads
 #
-# We need to find all the live threads related to the invasion, as such I will limit my search to begin from the 1st of february 2022 (there were no threads previous to February) and end one day prior to running the search:
+# We need to find all the live threads related to the invasion, as such I will limit my search to begin from the 1st of February 2022 (there were no threads previous to February) and end one day prior to running the search:
 
 # %%
 begin_point = datetime(2022, 2, 1)
@@ -111,7 +111,7 @@ mods = [
 # %% [markdown]
 # ### Iterating over each user
 #
-# The only way I found to find all the threads is to comb all submissions made by mods and then figure out which ones belong to what we care about here. As such, he following fragment of code does that, fetching up to 200 submissions per user and storing them in a list:
+# The only way I found to find all the threads is to comb all submissions made by mods and then figure out which ones belong to what we care about here. The following fragment of code does that, fetching up to 200 submissions per user and storing them in a list:
 
 # %%
 subs = []
@@ -184,7 +184,7 @@ live_threads[["id", "name", "author", "title", "created_utc", "created_at", "num
 #
 # The next step is pretty straightforward. We need to iterate over the file we just created and use the PRAW package to download all the comments made to a submission.
 #
-# To begin, let's create a function that takes in a comment and a submission and returns a list of its properties, this function is a bit more complex given that comments differ from one another. Once again, I am using the `getattr` function to make our lives easy.
+# To begin, let's create a function that takes in a comment and a submission and returns a list of its properties, this function is a bit more complex given that comments differ from one another. Once again, I am using the getattr function to make our lives easy.
 
 # %%
 comment_props = [
@@ -209,7 +209,6 @@ def extract_comment(comment, submission_id):
         cmmt = [hash_string(comment.author.name), submission_id]
     else:
         cmmt = [None, submission_id]
-
     cmmt.extend([getattr(comment, prop) for prop in comment_props])
 
     if comment.gildings:
@@ -223,7 +222,7 @@ def extract_comment(comment, submission_id):
 
 
 # %% [markdown]
-# Now, we are all set to iterate over the threads downloading all those that we do not have yet. [There is a tutorial](https://praw.readthedocs.io/en/stable/tutorials/comments.html) on the PRAW website itself that details how to download comments to a thread – there is some customisation going on in terms of converting everyting to a DataFrame but the code itself is pretty much self explanatory:
+# We are all set to iterate over the threads downloading all those we do not have yet. [There is a tutorial](https://praw.readthedocs.io/en/stable/tutorials/comments.html) on the PRAW website itself that details how to download comments to a thread - there is some customisation going on in terms of converting everything to a DataFrame, but the code itself is pretty much self-explanatory:
 
 # %%
 for submission_id in live_threads["id"]:
@@ -244,9 +243,9 @@ for submission_id in live_threads["id"]:
 # %% [markdown]
 # ## Conclusion
 #
-# And that is it, now we have downloaded all the relevant threads and we are ready to use them.
+# And that is it, now we have downloaded all the relevant threads, and we are ready to use them.
 #
-# In this post we had a look into how to create a dataset using Reddit data and in the next one I'll show you how  to use this dataset to create something interesting, I hopw you learned something new or at least that you liked it. As always, code is available here and I am available to answer any question on [Twitter at @io_exception](https://twitter.com/io_exception).
+# In this post, we had a look into how to create a dataset using Reddit data, and in the next one, I'll show you how to use this dataset to create something interesting; I hope you learned something new or at least that you liked it. As always, code is available here, and I am open to answering any question on [Twitter at @io_exception](https://twitter.com/io_exception).
 
 # %% [markdown]
 #
