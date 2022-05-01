@@ -22,6 +22,7 @@ import matplotlib.ticker as mticker
 import numpy as np
 import pandas as pd
 import pytz
+import imgkit
 from matplotlib.offsetbox import AnchoredText
 
 # %% [markdown]
@@ -34,7 +35,7 @@ from matplotlib.offsetbox import AnchoredText
 #
 # The first group is a single file that contains some high-level information that acts as an aggregator for the rest of the files. In this file, one can find the name, author, title, creation date, score and number of comments of each one of the *live threads* related to the invasion.
 
-# %%
+# %% file="threads.jpg" tags=[]
 threads = pd.read_csv("data/threads.csv")
 threads.head(2)
 
@@ -45,7 +46,7 @@ threads.head(2)
 #
 # One thing to note is that one can not simply use `pd.read_csv`, since sometimes the comments may contain line breaks that make it so that sometimes a single comment uses more than one row in the file. To successfully read all these files, one needs to pass the `lineterminator` argument:
 
-# %%
+# %% file="sample-comments.jpg" tags=[]
 file = "data/comments/comments__st8lq0.csv"
 comments = pd.read_csv(file, lineterminator="\n")
 comments.head(2)
@@ -191,7 +192,7 @@ mpl.rcParams.update(params)
 #
 # Let's try an initial basic plot – created with a function so that we can reuse it later!:
 
-# %%
+# %% description="First version" file="first-version.png" tags=[]
 def line_plot():
     fig = plt.figure(figsize=(25, 7), dpi=120)
     ax = fig.gca()
@@ -204,7 +205,7 @@ line_plot()
 
 
 # %% [markdown]
-# ![First version](https://ik.imagekit.io/thatcsharpguy/posts/worldnews/first-version.png?ik-sdk-version=javascript-1.4.3&updatedAt=1651313288116)
+# ![First version](https://ik.imagekit.io/thatcsharpguy/posts/worldnews/first-version.png?ik-sdk-version=javascript-1.4.3&updatedAt=1651354449381)
 #
 # Not bad, but it can be improved further!
 
@@ -222,7 +223,7 @@ line_plot()
 #  3. Set the formatting in the Y-axis; this one is a bit more convoluted since we need to "manually" set the ticks reading the original ones with `FixedLocator`, then use a `FuncFormatter` (and a lambda function) to specify the new formatting.
 #  4. Set some additional styles to make the major ticks stand out from the minor ones.
 
-# %%
+# %% description="Second version" file="second-version.png" tags=[]
 def add_ticks(axes):
 
     minor_locator = mdates.DayLocator(interval=1)
@@ -248,7 +249,7 @@ add_ticks(ax)
 
 
 # %% [markdown]
-# ![Second version](https://ik.imagekit.io/thatcsharpguy/posts/worldnews/second-version.png?ik-sdk-version=javascript-1.4.3&updatedAt=1651313288116)
+# ![Second version](https://ik.imagekit.io/thatcsharpguy/posts/worldnews/second-version.png?ik-sdk-version=javascript-1.4.3&updatedAt=1651353981035)
 #
 # Minor improvement, if you ask me!
 
@@ -260,7 +261,7 @@ add_ticks(ax)
 #  - It sets the limits of what the plot shows; here is where we use the `window` defined above and set the Y-axis's starting point to 0.
 #  - It sets all the labels and credit to the plot.
 
-# %%
+# %% description="Third version" file="third-version.png" tags=[]
 def add_legends(axes, window):
 
     axes.set_ylim(ymin=0)
@@ -279,7 +280,7 @@ add_legends(ax, window)
 
 
 # %% [markdown]
-# ![Third version](https://ik.imagekit.io/thatcsharpguy/posts/worldnews/third-version.png?ik-sdk-version=javascript-1.4.3&updatedAt=1651313288116)
+# ![Third version](https://ik.imagekit.io/thatcsharpguy/posts/worldnews/third-version.png?ik-sdk-version=javascript-1.4.3&updatedAt=1651353981190)
 #
 # Now people know what the plot is about! we are still not there, but we are getting close.
 
@@ -288,7 +289,7 @@ add_legends(ax, window)
 #
 # Remember we created an array of tuples called `major_events`? Tt is its time to shine. The function `add_highlighted_events` takes the axis and the major events array and iterates over them, marking their locations with the `.annotate` method.
 
-# %%
+# %% description="Fourth version" file="fourth-version.png" tags=[]
 def add_highlighted_events(axes, events):
     for date, title in events:
         event_utc_date = datetime.fromtimestamp(lower_bound(date.astimezone(pytz.utc).timestamp()))
@@ -314,14 +315,14 @@ add_highlighted_events(ax, major_events)
 
 
 # %% [markdown]
-# ![Fourth version](https://ik.imagekit.io/thatcsharpguy/posts/worldnews/fourth-version.png?ik-sdk-version=javascript-1.4.3&updatedAt=1651313288116)
+# ![Fourth version](https://ik.imagekit.io/thatcsharpguy/posts/worldnews/fourth-version.png?ik-sdk-version=javascript-1.4.3&updatedAt=1651353981161)
 
 # %% [markdown]
 # #### More colours
 #
 # In the `add_final_touches` function, you will find that I am adding a `grid` so that there is a subtle distinction across days. Set the background colour of the plot to a light yellow and the overall background of our graphic to white.
 
-# %%
+# %% description="Fifth version" file="fifth-version.png" tags=[]
 def add_final_touches(figure, axes):
 
     axes.grid(axis="x", which="both", color="#FFEE99")
@@ -337,7 +338,7 @@ add_highlighted_events(ax, major_events)
 add_final_touches(fig, ax)
 
 # %% [markdown]
-# ![Fifth version](https://ik.imagekit.io/thatcsharpguy/posts/worldnews/fifth-version.png?ik-sdk-version=javascript-1.4.3&updatedAt=1651313288116)
+# ![Fifth version](https://ik.imagekit.io/thatcsharpguy/posts/worldnews/fifth-version.png?ik-sdk-version=javascript-1.4.3&updatedAt=1651353981153)
 #
 # Then we can save the figure:
 
@@ -364,7 +365,7 @@ fig.savefig("worldnews.png")
 # Let's add another note to our plot so that people do not get confused:
 #
 
-# %%
+# %% description="Sixth version" file="sixth-version.png" tags=[]
 fig, ax = line_plot()
 
 add_ticks(ax)
@@ -385,7 +386,7 @@ ax.annotate(
 fig.savefig("worldnews.png")
 
 # %% [markdown]
-# ![Sixth and final version](https://ik.imagekit.io/thatcsharpguy/posts/worldnews/sixth-version.png?ik-sdk-version=javascript-1.4.3&updatedAt=1651313288116)
+# ![Sixth and final version](https://ik.imagekit.io/thatcsharpguy/posts/worldnews/sixth-version.png?ik-sdk-version=javascript-1.4.3&updatedAt=1651353981204)
 
 # %% [markdown]
 # ## Conclusion
