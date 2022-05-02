@@ -5,7 +5,8 @@ on:
   - cron: "0 10 * * *"
 
 jobs:
-  tweet:
+
+  process:
 
     runs-on: ubuntu-latest
 
@@ -24,12 +25,18 @@ jobs:
         pip install pipenv
         pipenv install --system --dev
 
-    - name: Download dataset
+    - name: Download dataset from Reddit
       env:
         CLIENT_ID: ${{ secrets.CLIENT_ID }}
         CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
         PASSWORD: ${{ secrets.PASSWORD }}
       run: python download_threads.py
+
+    - name: Upload dataset to Kaggle
+      env:
+        KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+        KAGGLE_USERNAME: ioexception
+      run: python upload.py
 
     - name: Commit changes
       run: |
