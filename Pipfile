@@ -4,17 +4,17 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-praw = "*"
-pandas = "*"
-jupyter = "*"
-jupyterlab = "*"
-matplotlib = "*"
 kaggle = "*"
+pandas = "*"
+praw = "*"
 
 [dev-packages]
-isort = "*"
 black = "*"
+isort = "*"
+jupyter = "*"
+jupyterlab = "*"
 jupytext = "*"
+matplotlib = "*"
 
 [requires]
 python_version = "3.8"
