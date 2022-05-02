@@ -23,7 +23,7 @@ import praw
 # %% [markdown]
 # ## Motivation
 #
-# Ever since Russia's "special military operation" in Ukraine started, I have been doomscrolling the comments in the [r/worldnews subreddit](https://www.reddit.com/r/worldnews) live threads. I saw with amusement how the frequency of comments increased with each major event but also noticed how each day there were fewer and fewer comments showing a sustained decrease of interest (at least when measured by Reddit comments) on the topic of the invasion.
+# Ever since Russia's "special military operation" in Ukraine started, I have been doomscrolling the comments in the [r/worldnews subreddit](https://www.reddit.com/r/worldnews) live threads. I saw with amazement how the frequency of comments increased with each major event but also noticed how each day there were fewer and fewer comments showing a sustained decrease of interest (at least when measured by Reddit comments) on the topic of the invasion.
 #
 # This prompted me to find all the live threads in an attempt to figure out whether my feeling was true or not. The following two posts are a result of this curiosity; in the first one (the one you are reading now) I'll show you how I created the dataset, whereas in the second one, you will find how to use the data.
 
@@ -130,7 +130,7 @@ for username in mods:
 # %%
 # fmt: off
 properties = [
-    "id", "created_utc", "name", "num_comments", 
+    "id", "created_utc", "name", "num_comments",
     "permalink", "score", "title", "upvote_ratio"
 ]
 # fmt: on
@@ -188,19 +188,11 @@ live_threads[["id", "name", "author", "title", "created_utc", "created_at", "num
 
 # %%
 comment_props = [
-    "id",
-    "body",
-    "edited",
-    "created_utc",
-    "link_id",
-    "parent_id",
-    "distinguished",
-    "depth",
-    "ups",
-    "downs",
-    "score",
-    "total_awards_received",
-    "gilded",
+    "id", "body", "edited",
+    "created_utc", "link_id",
+    "parent_id", "distinguished",
+    "depth", "ups", "downs", "score",
+    "total_awards_received", "gilded",
 ]
 
 

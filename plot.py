@@ -197,7 +197,7 @@ def line_plot():
     fig = plt.figure(figsize=(25, 7), dpi=120)
     ax = fig.gca()
     ax.plot(comments_histogram.index, comments_histogram, color="#005BBB")
-
+    ax.fill_between(comments_histogram.index, comments_histogram, color="#cce5ff", alpha=0.5)
     return fig, ax
 
 
