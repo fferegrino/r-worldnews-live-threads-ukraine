@@ -15,6 +15,8 @@ jupyter = "*"
 jupyterlab = "*"
 jupytext = "*"
 matplotlib = "*"
+click = "*"
+imgkit = "*"
 
 [requires]
 python_version = "3.8"
