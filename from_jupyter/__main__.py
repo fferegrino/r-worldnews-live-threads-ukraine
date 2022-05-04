@@ -1,6 +1,9 @@
+from pathlib import Path
+
 import click
 
 from from_jupyter.convert import convert_to_md
+from from_jupyter.gistify import gistify
 
 
 @click.group()
@@ -14,5 +17,13 @@ def cli():
 def md(file, no_code, resources):
     convert_to_md(file, remove_code=no_code, save_resources=resources)
 
-if __name__ == '__main__':
+
+@cli.command()
+@click.argument("file")
+@click.argument("personal-token", envvar="GITHUB_PERSONAL_TOKEN")
+def gist(file, personal_token):
+    gistify(Path(file), personal_token)
+
+
+if __name__ == "__main__":
     cli()
