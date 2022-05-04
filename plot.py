@@ -15,6 +15,7 @@
 # %% _uuid="8f2839f25d086af736a60e9eeb907d3b93b6e0e5" _cell_guid="b1076dfc-b9ad-4769-8c92-a6c4dae69d19"
 from datetime import datetime, timedelta
 
+import imgkit
 import matplotlib as mpl
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
@@ -22,7 +23,6 @@ import matplotlib.ticker as mticker
 import numpy as np
 import pandas as pd
 import pytz
-import imgkit
 from matplotlib.offsetbox import AnchoredText
 
 # %% [markdown]
