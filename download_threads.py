@@ -233,11 +233,64 @@ for submission_id in live_threads["id"]:
     frame.to_csv(file_name, index=False)
 
 # %% [markdown]
+# ## Automating everything through GitHub
+#
+# New threads are created every day, which means that if we want to keep our dataset updated, we must run this script every day as well. If you keep your code in GitHub, it sounds like the perfect candidate for automation with GitHub Actions.
+#
+# First off, we will need to save our environment variables with secrets (*CLIENT_ID*, *CLIENT_SECRET*, *PASSWORD*) as repository secrets. To do this, go to *Settings ➡ Secrets (Actions) ➡ New repository secret*:
+#
+# ![GitHub secrets](https://ik.imagekit.io/thatcsharpguy/posts/worldnews/secrets-gh.png?ik-sdk-version=javascript-1.4.3&updatedAt=1651614686032)
+#
+# Once all three secrets are available, create a *.yml* file in the *.github/workflows* folder with the following content:
+#
+# ```yaml
+# name: Download dataset
+#
+# on:
+#   schedule:
+#   - cron: "0 10 * * *"
+#
+# jobs:
+#   process:
+#     runs-on: ubuntu-latest
+#     steps:
+#     - name: Checkout
+#       uses: actions/checkout@v2
+#     - name: Set up Python 3.8
+#       uses: actions/setup-python@v2
+#       with:
+#         python-version: "3.8"
+#     - name: Install dependencies
+#       run: |
+#         python -m pip install --upgrade pip
+#         pip install pipenv
+#         pipenv install --system --dev
+#     - name: Download dataset from Reddit
+#       env:
+#         CLIENT_ID: ${{ secrets.CLIENT_ID }}
+#         CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+#         PASSWORD: ${{ secrets.PASSWORD }}
+#       run: python download_threads.py
+#     - name: Commit changes
+#       run: |
+#         git config --global user.email "antonio.feregrino@gmail.com"
+#         git config --global user.name "Antonio Feregrino"
+#         git add data/
+#         git diff --quiet && git diff --staged --quiet || git commit -m "Updated: `date +'%Y-%m-%d %H:%M'`"
+#         git push
+# ```
+#
+# In short, every day at 10 AM:
+#
+#  1. It checkouts the code
+#  2. Sets up Python 3.8
+#  3. Installs the dependencies, in this case I was using pipenv to handle them locally - you could use something entirely different
+#  4. Executes all the previous Python code that downloads the threads and their comments
+#  5. Commits all the changes to the repository, saving our *csv* files.
+
+# %% [markdown]
 # ## Conclusion
 #
 # And that is it, now we have downloaded all the relevant threads, and we are ready to use them.
 #
 # In this post, we had a look into how to create a dataset using Reddit data, and in the next one, I'll show you how to use this dataset to create something interesting; I hope you learned something new or at least that you liked it. As always, [code is available here](https://github.com/fferegrino/r-worldnews-live-threads-ukraine/blob/main/download_threads.ipynb), and I am open to answering any question on [Twitter at @io_exception](https://twitter.com/io_exception).
-
-# %% [markdown]
-#

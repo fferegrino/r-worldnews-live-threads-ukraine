@@ -1,8 +1,8 @@
 import datetime
 import json
 from pathlib import Path
-import pandas as pd
 
+import pandas as pd
 from kaggle import api
 
 schema_fields = [
@@ -29,14 +29,13 @@ def prepare_metadata():
     with open("dataset-metadata.json") as r:
         dataset_metadata = json.load(r)
 
-
-    threads = pd.read_csv('data/threads.csv')
+    threads = pd.read_csv("data/threads.csv")
 
     resources = []
 
     for idx, row in threads.iterrows():
-        thread = row['id']
-        csv_file = Path('data', 'comments', f"comments__{thread}.csv")
+        thread = row["id"]
+        csv_file = Path("data", "comments", f"comments__{thread}.csv")
 
         if not csv_file.exists():
             raise RuntimeError(f"File for thread {thread} does not exist")
@@ -47,7 +46,7 @@ def prepare_metadata():
         resource = {
             "path": str(csv_file)[5:],
             "description": f"Comments submitted to the thread: ({thread}) \"{row['title']}\" submitted on {row['created_at']}",
-            "schema": {"fields": schema}
+            "schema": {"fields": schema},
         }
         resources.append(resource)
 
