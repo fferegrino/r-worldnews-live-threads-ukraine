@@ -3,6 +3,7 @@ from pathlib import Path
 import click
 
 from from_jupyter.convert import convert_to_md
+from from_jupyter.export import export_images
 from from_jupyter.gistify import gistify
 
 
@@ -36,6 +37,11 @@ def md(file, no_code, resources):
 @click.argument("personal-token", envvar="GITHUB_PERSONAL_TOKEN")
 def gist(file, personal_token):
     gistify(Path(file), personal_token)
+
+@cli.command()
+@click.argument("file")
+def images(file):
+    export_images(Path(file))
 
 
 if __name__ == "__main__":
