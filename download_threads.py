@@ -223,7 +223,7 @@ for submission_id in live_threads["id"]:
         continue
 
     submission = reddit.submission(id=submission_id)
-    submission.comments.replace_more(limit=1)
+    submission.comments.replace_more(limit=None)
 
     comments = []
     for comment in submission.comments.list():
