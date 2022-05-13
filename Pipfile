@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 kaggle = "*"
+matplotlib = "*"
 pandas = "*"
 praw = "*"
 streamlit = "*"
@@ -15,7 +16,6 @@ isort = "*"
 jupyter = "*"
 jupyterlab = "*"
 jupytext = "*"
-matplotlib = "*"
 
 [requires]
 python_version = "3.8"
