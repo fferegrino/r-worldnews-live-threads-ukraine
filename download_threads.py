@@ -12,7 +12,7 @@
 #     name: python3
 # ---
 
-# %%
+# %% gist="imports.py" gist_id="a3a36415e9546e2a9d4258d98aec5b7d" tags=[]
 import hashlib
 import os
 from datetime import datetime, timedelta
@@ -47,7 +47,7 @@ import praw
 #
 # Once we have got our client id and secret we can move on to create a `praw.Reddit` instance passing the information we just got from Reddit; to avoid hardcoding our password and secrets let's use environment variables to set these values:
 
-# %%
+# %% gist="client_creation.py" gist_id="fb0a912c5375693f142ab552f1a10aea" tags=[]
 reddit = praw.Reddit(
     client_id=os.environ["CLIENT_ID"],
     client_secret=os.environ["CLIENT_SECRET"],
@@ -62,7 +62,7 @@ reddit = praw.Reddit(
 #
 # We will use a function that takes a string and messes with it in a deterministic manner, this is to "mask" some values that I do not think should be made public, or at least, not so easily.
 
-# %%
+# %% gist="hashing_function.py" gist_id="f19c5d077e4e21698b3defaf9d906f3d" tags=[]
 def hash_string(content):
     return hashlib.md5(content.encode()).hexdigest()
 
@@ -72,14 +72,14 @@ def hash_string(content):
 #
 # We need to find all the live threads related to the invasion, as such I will limit my search to begin from the 1st of February 2022 (there were no threads previous to February) and end one day prior to running the search:
 
-# %%
+# %% gist="times.py" gist_id="8c08314f22f46eb3e2a1c4c4655ee6e6" tags=[]
 begin_point = datetime(2022, 2, 1)
 today = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(hours=12)
 
 # %% [markdown]
 # Next I define a list of *r/worldnews* moderators, since they are the only ones who are able to create live threads. The list of mods can be obtained using the API itself
 
-# %%
+# %% gist="all_world_news_mods.py" gist_id="7af8624f90f91cd3f63dee0dff220370" tags=[]
 # fmt:off
 mods = [
     "qgyh2", "maxwellhill", "BritishEnglishPolice", "anutensil", "bennjammin",
@@ -113,7 +113,7 @@ mods = [
 #
 # The only way I found to find all the threads is to comb all submissions made by mods and then figure out which ones belong to what we care about here. The following fragment of code does that, fetching up to 200 submissions per user and storing them in a list:
 
-# %%
+# %% gist="iterate_over_users.py" gist_id="a96aa006e29efbaf3f3a82ad23e22ee3" tags=[]
 subs = []
 for username in mods:
     user = reddit.redditor(name=username)
@@ -123,11 +123,11 @@ for username in mods:
 # %% [markdown]
 # ### Iterating over all submisions
 #
-# Once we have all submissions made by mods, we can iterate over them in search of the ones we want. In this case, the ones we want start with either: *"/r/worldnews live thread"*, *"r/worldnews live thread"* or *"worldnews live thread"* and were made between the 1st of february and yesterday:
+# Once we have all submissions made by mods, we can iterate over them in search of the ones we want. In this case, the ones we want start with either: *"/r/worldnews live thread"*, *"r/worldnews live thread"* or *"worldnews live thread"* and were made between the 1st of february and yesterday.
 #
 # Lastly, to extract all the properties, I am using the `getattr` function in combination with a list of properties.
 
-# %%
+# %% gist="iterate_submissions.py" gist_id="39020dc915a893577c6d2b8ae2277ba6" tags=[]
 # fmt: off
 properties = [
     "id", "created_utc", "name", "num_comments",
@@ -155,29 +155,27 @@ for post in subs:
 # %% [markdown]
 # ### Converting to a DataFrame
 #
-# Once we have all the submissions in a list, we should convert it to a *pandas* DataFrame to make it easy to work with and to save:
-
-# %%
-live_threads = pd.DataFrame(submissions, columns=["author"] + properties)
-
-# %% [markdown]
-# Then we can:
+# Once we have all the submissions in a list, we should convert it to a *pandas* DataFrame to make it easy to work with and to save. Then we can:
 #
 #  - Use `pd.to_datetime` to convert the unix timestamp to an actual date
 #  - Hash the author's name with the previously declared `hash_string` function
+#  
+# After all the transformations, we can save the thread's data with an specified order in the columns, sorted by creation date and without index:
 
-# %%
+# %% gist="save_sorted.py" gist_id="0df2f2aae27fd2818e7cbd01322525ba" tags=[]
+live_threads = pd.DataFrame(submissions, columns=["author"] + properties)
+
 live_threads["created_at"] = pd.to_datetime(live_threads["created_utc"], unit="s", origin="unix")
 live_threads["author"] = live_threads["author"].apply(hash_string)
 
-# %% [markdown]
-# Finally, it is time to save the thread's data with an specified order in the columns, sorted by creation date and without index:
+ordered_columns = [
+    "id", "name", "author", 
+    "title", "created_utc", "created_at", 
+    "num_comments", "score", 
+    "upvote_ratio", "permalink"
+]
 
-# %%
-live_threads[["id", "name", "author", "title", "created_utc", "created_at", "num_comments", "score", "upvote_ratio", "permalink"]].sort_values(
-    "created_utc", ascending=True
-).to_csv("data/threads.csv", index=False)
-
+live_threads[ordered_columns].sort_values("created_utc", ascending=True).to_csv("data/threads.csv", index=False)
 
 # %% [markdown]
 # ## Downloading ALL the comments for a ALL threads
@@ -186,7 +184,7 @@ live_threads[["id", "name", "author", "title", "created_utc", "created_at", "num
 #
 # To begin, let's create a function that takes in a comment and a submission and returns a list of its properties, this function is a bit more complex given that comments differ from one another. Once again, I am using the getattr function to make our lives easy.
 
-# %%
+# %% gist="process_comments.py" gist_id="09ab4560c5d8407544b7cf3989a256c9" tags=[]
 comment_props = [
     "id", "body", "edited",
     "created_utc", "link_id",
@@ -216,7 +214,7 @@ def extract_comment(comment, submission_id):
 # %% [markdown]
 # We are all set to iterate over the threads downloading all those we do not have yet. [There is a tutorial](https://praw.readthedocs.io/en/stable/tutorials/comments.html) on the PRAW website itself that details how to download comments to a thread - there is some customisation going on in terms of converting everything to a DataFrame, but the code itself is pretty much self-explanatory:
 
-# %%
+# %% gist="download_all.py" gist_id="dd12fb39c1435172dd1db61b1c8eba8d" tags=[]
 for submission_id in live_threads["id"]:
     file_name = f"data/comments/comments__{submission_id}.csv"
     if os.path.exists(file_name):

@@ -12,7 +12,7 @@
 #     name: python3
 # ---
 
-# %% _uuid="8f2839f25d086af736a60e9eeb907d3b93b6e0e5" _cell_guid="b1076dfc-b9ad-4769-8c92-a6c4dae69d19"
+# %% gist="imports.py" gist_id="dc5aeff41f94f2050bf02ddafac46fbf" tags=[]
 from datetime import datetime, timedelta
 
 import matplotlib as mpl
@@ -34,7 +34,7 @@ from matplotlib.offsetbox import AnchoredText
 #
 # The first group is a single file that contains some high-level information that acts as an aggregator for the rest of the files. In this file, one can find the name, author, title, creation date, score and number of comments of each one of the *live threads* related to the invasion.
 
-# %% file="threads.jpg" tags=[]
+# %% dataframe="threads.jpg" gist="read_threads_file.py" gist_id="51ea5205241e4596331f03fccb1da135" tags=[]
 threads = pd.read_csv("data/threads.csv")
 threads.head(2)
 
@@ -45,7 +45,7 @@ threads.head(2)
 #
 # One thing to note is that one can not simply use `pd.read_csv`, since sometimes the comments may contain line breaks that make it so that sometimes a single comment uses more than one row in the file. To successfully read all these files, one needs to pass the `lineterminator` argument:
 
-# %% file="sample-comments.jpg" tags=[]
+# %% dataframe="sample-comments.jpg" gist="read_comments_file.py" gist_id="f88ab8c9ab2e62d43a7cfddebbcec3ee" tags=[]
 file = "data/comments/comments__st8lq0.csv"
 comments = pd.read_csv(file, lineterminator="\n")
 comments.head(2)
@@ -67,7 +67,7 @@ comments.head(2)
 #
 # We can keep using *pandas* but being more clever about using it. Did you know that you can specify that you only want a subset of columns with the `usecols` argument?
 
-# %%
+# %% gist="read_all_dates.py" gist_id="25ed1ea8d63a71dd5fe9adc3c8c9cdf4" tags=[]
 created_dates = []
 for thread_id in threads["id"]:
     comments_file = f"data/comments/comments__{thread_id}.csv"
@@ -84,7 +84,7 @@ created_dates = np.concatenate(created_dates)
 #
 # We will use a couple of helper functions to round date times up or down to the nearest step in the interval we define (and one more to visualise timestamps).
 
-# %%
+# %% gist="additional_functions.py" gist_id="2c94108f5fa630ba81760e08ea82e12f" tags=[]
 # Helper date functions
 INTERVAL = 3600  # 1 hour in seconds
 
@@ -104,7 +104,7 @@ def humanise(ts):
 # %% [markdown]
 # Por ejemplo, toma la fecha *04/29/2022, 20:20:58* cuyo timestamp es `1651263658`:
 
-# %%
+# %% gist="functions_example.py" gist_id="75d00e3f11cc45bcfb290964a10d7bc4" keep_output=true tags=[]
 example_ts = 1651263658
 actual_date = humanise(1651263658)
 upper = humanise(upper_bound(example_ts))
@@ -115,7 +115,7 @@ print(f"{lower} is the lower bound of {actual_date} and its upper bound is {uppe
 # %% [markdown]
 # Now that we have a way to calculate the upper and lower bounds of a specific date, we can move on to calculate the bin edges. This is easy once we know the minimum and maximum dates in our `created_dates`. In fact, getting the bin edges is a one-liner with NumPy:
 
-# %%
+# %% gist="bin_edges.py" gist_id="39e9934307de2526820e3e710f579fe9" tags=[]
 bin_edges = np.arange(
     start=lower_bound(min(created_dates)),
     stop=upper_bound(max(created_dates)) + 1,
@@ -128,7 +128,7 @@ bin_edges = np.arange(
 #
 # Now that we have the bin edges, we are ready to calculate the histogram. This is yet another one-liner, thanks to NumPy's `np.histogram`!
 
-# %%
+# %% gist="generate_histogram.py" gist_id="4bd4858f58b389cd59fa1bc8fbdaed95" tags=[]
 values, bin_edges = np.histogram(created_dates, bins=bin_edges)
 
 # %% [markdown]
@@ -138,7 +138,7 @@ values, bin_edges = np.histogram(created_dates, bins=bin_edges)
 #
 # For further customisation purposes we can specify a determined window of time we want to show just in case we want to "zoom in" on our plot. For now, since the live threads started on the 14th of february 2022, we will take that as the beginning of our window and as for the end, let's take the maximum date available + 1 day.
 
-# %%
+# %% gist="create_window.py" gist_id="1b1f2ed0b97db1396cc7a9cbb36ac825" tags=[]
 begining = datetime(2022, 2, 14)
 end = datetime.fromtimestamp(bin_edges[-1]).replace(hour=0, minute=0) + timedelta(days=1)
 window = (begining, end)
@@ -148,7 +148,7 @@ window = (begining, end)
 #
 # To make our task easy, let's turn our values and edges into a pandas Series:
 
-# %%
+# %% gist="turn_histogram_into_series.py" gist_id="8218c8abbfaa51299859a5fc4ca44f5c" tags=[]
 comments_histogram = pd.Series(data=values, index=pd.to_datetime(bin_edges[:-1], unit="s"))
 comments_histogram = comments_histogram[(comments_histogram.index >= begining) & (comments_histogram.index <= end)]
 
@@ -159,7 +159,7 @@ comments_histogram = comments_histogram[(comments_histogram.index >= begining) &
 #
 # We need to create an array of tuples, where each tuple is the date of when the event happened and a short description of it:
 
-# %%
+# %% gist="important_events.py" gist_id="de096aa3fc5666b74061ad5bfa35691b" tags=[]
 major_events = [
     (datetime(2022, 2, 21, 19, 35), "Russia recognizes the\nindependence of\nbreakaway regions"),
     (datetime(2022, 2, 24, 3, 0), 'Putin announces the\n"special military operation"\nin Ukraine'),
@@ -174,7 +174,7 @@ major_events = [
 #
 # Finally! the part everyone was waiting for. Let's start by configuring a few options for *matplotlib*:
 
-# %%
+# %% gist="matplotlib_config.py" gist_id="ec81eceb19a657d88dbc6ea924a910e7" tags=[]
 params = {
     "axes.titlesize": 20,
     "axes.labelsize": 15,
@@ -192,7 +192,7 @@ mpl.rcParams.update(params)
 #
 # Let's try an initial basic plot – created with a function so that we can reuse it later!:
 
-# %% description="First version" file="first-version.png" tags=[]
+# %% description="First version" gist="first_plot.py" gist_id="310579e01a296ade9477666d2e4fd663" image="first-version.png" tags=[]
 def line_plot(histogram):
     fig = plt.figure(figsize=(25, 7), dpi=120)
     ax = fig.gca()
@@ -223,7 +223,7 @@ line_plot(comments_histogram)
 #  3. Set the formatting in the Y-axis; this one is a bit more convoluted since we need to "manually" set the ticks reading the original ones with `FixedLocator`, then use a `FuncFormatter` (and a lambda function) to specify the new formatting.
 #  4. Set some additional styles to make the major ticks stand out from the minor ones.
 
-# %% description="Second version" file="second-version.png" tags=[]
+# %% description="Second version" gist="second_plot.py" gist_id="b4323d8f665845807bff8545acd5f7fa" image="second-version.png" tags=[]
 def add_ticks(axes):
 
     minor_locator = mdates.DayLocator(interval=1)
@@ -261,7 +261,7 @@ add_ticks(ax)
 #  - It sets the limits of what the plot shows; here is where we use the `window` defined above and set the Y-axis's starting point to 0.
 #  - It sets all the labels and credit to the plot.
 
-# %% description="Third version" file="third-version.png" tags=[]
+# %% description="Third version" gist="third_plot.py" gist_id="b651c9b8b73ae045d4e04c9921655ccd" image="third-version.png" tags=[]
 def add_legends(axes, window):
 
     axes.set_ylim(ymin=0)
@@ -289,7 +289,7 @@ add_legends(ax, window)
 #
 # Remember we created an array of tuples called `major_events`? Tt is its time to shine. The function `add_highlighted_events` takes the axis and the major events array and iterates over them, marking their locations with the `.annotate` method.
 
-# %% description="Fourth version" file="fourth-version.png" tags=[]
+# %% description="Fourth version" gist="fourth_plot.py" gist_id="d8c876a949da27cb627fbfe3a84fd4e8" image="fourth-version.png" tags=[]
 def add_highlighted_events(axes, events):
     for date, title in events:
         event_utc_date = datetime.fromtimestamp(lower_bound(date.astimezone(pytz.utc).timestamp()))
@@ -325,9 +325,9 @@ add_highlighted_events(ax, major_events)
 # %% [markdown]
 # #### More colours
 #
-# In the `add_final_touches` function, you will find that I am adding a `grid` so that there is a subtle distinction across days. Set the background colour of the plot to a light yellow and the overall background of our graphic to white.
+# In the `add_final_touches` function, you will find that I am adding a `grid` so that there is a subtle distinction across days. Set the background colour of the plot to a light yellow and the overall background of our graphic to white – then we can save the figure.
 
-# %% description="Fifth version" file="fifth-version.png" tags=[]
+# %% description="Fifth version" gist="fifth_plot.py" gist_id="50da8cf3614eb864e8fc17b17c2e835c" image="fifth-version.png" tags=[]
 def add_final_touches(figure, axes):
 
     axes.grid(axis="x", which="both", color="#FFEE99")
@@ -370,7 +370,7 @@ fig.savefig("worldnews.png")
 # Let's add another note to our plot so that people do not get confused:
 #
 
-# %% description="Sixth version" file="sixth-version.png" tags=[]
+# %% description="Sixth version" gist="sixth_plot.py" gist_id="2852d044709584c6fba2956dff22c53c" image="sixth-version.png" tags=[]
 fig, ax = line_plot(comments_histogram)
 
 add_ticks(ax)

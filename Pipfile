@@ -16,6 +16,8 @@ isort = "*"
 jupyter = "*"
 jupyterlab = "*"
 jupytext = "*"
+click = "*"
+imgkit = "*"
 
 [requires]
 python_version = "3.8"
