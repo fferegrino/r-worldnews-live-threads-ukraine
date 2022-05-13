@@ -150,6 +150,7 @@ window = (begining, end)
 
 # %%
 comments_histogram = pd.Series(data=values, index=pd.to_datetime(bin_edges[:-1], unit="s"))
+comments_histogram = comments_histogram[(comments_histogram.index >= begining) & (comments_histogram.index <= end)]
 
 # %% [markdown]
 # #### Important events
@@ -292,19 +293,24 @@ add_legends(ax, window)
 def add_highlighted_events(axes, events):
     for date, title in events:
         event_utc_date = datetime.fromtimestamp(lower_bound(date.astimezone(pytz.utc).timestamp()))
-        arrow_tip_location = comments_histogram[event_utc_date]
-        xy = (event_utc_date, arrow_tip_location)
-        xy_text = (event_utc_date - timedelta(days=0.6), arrow_tip_location + 4_000)
-        arrow_props = dict(arrowstyle="-|>", facecolor="black")
+        try:
+            arrow_tip_location = comments_histogram[event_utc_date]
+            xy = (event_utc_date, arrow_tip_location)
+            xy_text = (event_utc_date - timedelta(days=0.6), arrow_tip_location + 4_000)
+            arrow_props = dict(arrowstyle="-|>", facecolor="black")
 
-        axes.annotate(
-            title,
-            xy=xy,
-            xytext=xy_text,
-            ha="right",
-            arrowprops=arrow_props,
-            fontsize=15,
-        )
+            axes.annotate(
+                title,
+                xy=xy,
+                xytext=xy_text,
+                ha="right",
+                arrowprops=arrow_props,
+                fontsize=15,
+            )
+        except KeyError:
+            # The event is not covered within our window, that is the reason
+            # behind this failure
+            pass
 
 
 fig, ax = line_plot(comments_histogram)

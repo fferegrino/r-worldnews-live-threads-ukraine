@@ -27,7 +27,7 @@ def load_times():
     return np.concatenate(created_dates)
 
 
-INTERVAL = st.slider("Time interval in minutes", min_value=15, max_value=180, step=15, value=60) * 60
+created_dates = load_times()
 
 
 def lower_bound(ts):
@@ -38,7 +38,21 @@ def upper_bound(ts):
     return ts + (INTERVAL - ((ts) % INTERVAL) if (ts) % INTERVAL != 0 else 0)
 
 
-created_dates = load_times()
+col1, col2, col3 = st.columns(3)
+
+options = [
+    ("15 minutes", 15),
+    ("30 minutes", 30),
+    ("1 hour", 60),
+    ("3 hours", 180),
+    ("6 hours", 60 * 6),
+]
+
+with col1:
+    selected_time = st.selectbox("Bin size", [opt[0] for opt in options], index=2)
+
+[selected] = [opt[1] for opt in options if opt[0] == selected_time]
+INTERVAL = selected * 60
 
 bin_edges = np.arange(
     start=lower_bound(min(created_dates)),
@@ -53,18 +67,17 @@ min_date = datetime.fromtimestamp(bin_edges.min())
 max_date = datetime.fromtimestamp(bin_edges.max())
 
 
-col1, col2 = st.columns(2)
-
-with col1:
-    begining = st.date_input("From", value=min_date, min_value=min_date, max_value=max_date)
 with col2:
+    beginning = st.date_input("From", value=min_date, min_value=min_date, max_value=max_date)
+    beginning = datetime(year=beginning.year, month=beginning.month, day=beginning.day)
+with col3:
     end = st.date_input("To", value=max_date, min_value=min_date, max_value=max_date)
+    end = datetime(year=end.year, month=end.month, day=end.day)
+
+window = (beginning, end)
 
 comments_histogram = pd.Series(data=values, index=pd.to_datetime(bin_edges[:-1], unit="s"))
-
-# begining = datetime(2022, 2, 14)
-end = datetime.fromtimestamp(bin_edges[-1]).replace(hour=0, minute=0) + timedelta(days=1)
-window = (begining, end)
+comments_histogram = comments_histogram[(comments_histogram.index >= beginning) & (comments_histogram.index <= end)]
 
 
 major_events = [
