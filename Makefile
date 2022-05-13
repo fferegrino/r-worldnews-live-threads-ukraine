@@ -3,7 +3,7 @@ fmt:
 	isort . --treat-comment-as-code "# %%"
 
 notebooks:
-	jupytext --to notebook plot.py download_threads.py
+	jupytext --update --to notebook plot.py download_threads.py
 
 markdown:
 	jupytext --to md plot.py download_threads.py

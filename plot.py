@@ -22,7 +22,6 @@ import matplotlib.ticker as mticker
 import numpy as np
 import pandas as pd
 import pytz
-import imgkit
 from matplotlib.offsetbox import AnchoredText
 
 # %% [markdown]
@@ -193,15 +192,15 @@ mpl.rcParams.update(params)
 # Let's try an initial basic plot – created with a function so that we can reuse it later!:
 
 # %% description="First version" file="first-version.png" tags=[]
-def line_plot():
+def line_plot(histogram):
     fig = plt.figure(figsize=(25, 7), dpi=120)
     ax = fig.gca()
-    ax.plot(comments_histogram.index, comments_histogram, color="#005BBB")
-    ax.fill_between(comments_histogram.index, comments_histogram, color="#cce5ff", alpha=0.5)
+    ax.plot(histogram.index, histogram, color="#005BBB")
+    ax.fill_between(histogram.index, histogram, color="#cce5ff", alpha=0.5)
     return fig, ax
 
 
-line_plot()
+line_plot(comments_histogram)
 
 
 # %% [markdown]
@@ -244,7 +243,7 @@ def add_ticks(axes):
     ax.tick_params(which="major", labelsize=15)
 
 
-fig, ax = line_plot()
+fig, ax = line_plot(comments_histogram)
 add_ticks(ax)
 
 
@@ -274,7 +273,7 @@ def add_legends(axes, window):
     axes.add_artist(AnchoredText(credit, loc=1, frameon=True))
 
 
-fig, ax = line_plot()
+fig, ax = line_plot(comments_histogram)
 add_ticks(ax)
 add_legends(ax, window)
 
@@ -308,7 +307,7 @@ def add_highlighted_events(axes, events):
         )
 
 
-fig, ax = line_plot()
+fig, ax = line_plot(comments_histogram)
 add_ticks(ax)
 add_legends(ax, window)
 add_highlighted_events(ax, major_events)
@@ -331,7 +330,7 @@ def add_final_touches(figure, axes):
     figure.tight_layout()
 
 
-fig, ax = line_plot()
+fig, ax = line_plot(comments_histogram)
 add_ticks(ax)
 add_legends(ax, window)
 add_highlighted_events(ax, major_events)
@@ -366,7 +365,7 @@ fig.savefig("worldnews.png")
 #
 
 # %% description="Sixth version" file="sixth-version.png" tags=[]
-fig, ax = line_plot()
+fig, ax = line_plot(comments_histogram)
 
 add_ticks(ax)
 add_legends(ax, window)
