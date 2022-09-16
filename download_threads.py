@@ -116,9 +116,12 @@ mods = [
 # %% gist="iterate_over_users.py" gist_id="a96aa006e29efbaf3f3a82ad23e22ee3" tags=[]
 subs = []
 for username in mods:
-    user = reddit.redditor(name=username)
-    for post in user.submissions.new(limit=200):
-        subs.append(post)
+    try:
+        user = reddit.redditor(name=username)
+        for post in user.submissions.new(limit=200):
+            subs.append(post)
+    except:
+        pass
 
 # %% [markdown]
 # ### Iterating over all submisions
