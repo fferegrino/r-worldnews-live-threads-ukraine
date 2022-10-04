@@ -6140,94 +6140,6 @@
             }
         },
         {
-            "path": "comments/comments__tlx7fe.csv",
-            "description": "Comments submitted to the thread: (tlx7fe) \"/r/WorldNews Live Thread: Russian Invasion of Ukraine Day 29, Part 1 (Thread #164)\" submitted on 2022-03-24 04:03:11",
-            "schema": {
-                "fields": [
-                    {
-                        "name": "author",
-                        "description": "A hashed version of the poster's username",
-                        "type": "string"
-                    },
-                    {
-                        "name": "submission_id",
-                        "description": "A string identifier of the thread",
-                        "type": "string"
-                    },
-                    {
-                        "name": "id",
-                        "description": "A string identifier of the comment",
-                        "type": "string"
-                    },
-                    {
-                        "name": "body",
-                        "description": "The comment's content",
-                        "type": "string"
-                    },
-                    {
-                        "name": "edited",
-                        "description": "A flag that specifies if the comment has been edited \u2013 contains a timestamp if it has",
-                        "type": "string"
-                    },
-                    {
-                        "name": "created_utc",
-                        "description": "An epoch timestamp of when the comment was posted",
-                        "type": "number"
-                    },
-                    {
-                        "name": "link_id",
-                        "description": "A string identifier of the thread",
-                        "type": "string"
-                    },
-                    {
-                        "name": "parent_id",
-                        "description": "A string identifier of the parent comment",
-                        "type": "string"
-                    },
-                    {
-                        "name": "distinguished",
-                        "description": "A flag that specifies if the comment was made by a moderator on duty",
-                        "type": "string"
-                    },
-                    {
-                        "name": "depth",
-                        "description": "The overall depth of the comment tree",
-                        "type": "number"
-                    },
-                    {
-                        "name": "ups",
-                        "description": "The score of a comment (ups-downs)",
-                        "type": "number"
-                    },
-                    {
-                        "name": "downs",
-                        "description": "As of now, this column is always 0",
-                        "type": "number"
-                    },
-                    {
-                        "name": "score",
-                        "description": "The score of a comment (ups-downs)",
-                        "type": "number"
-                    },
-                    {
-                        "name": "total_awards_received",
-                        "description": "The number of awards received by a comment",
-                        "type": "number"
-                    },
-                    {
-                        "name": "gilded",
-                        "description": "Whether the comment has been gilded",
-                        "type": "boolean"
-                    },
-                    {
-                        "name": "gildings",
-                        "description": "The gildings received by a comment, if any",
-                        "type": "string"
-                    }
-                ]
-            }
-        },
-        {
             "path": "comments/comments__tms6l5.csv",
             "description": "Comments submitted to the thread: (tms6l5) \"/r/WorldNews Live Thread: Russian Invasion of Ukraine Day 29, Part 2 (Thread #165)\" submitted on 2022-03-24 18:04:58",
             "schema": {
@@ -23566,6 +23478,94 @@
         {
             "path": "comments/comments__xtewg0.csv",
             "description": "Comments submitted to the thread: (xtewg0) \"/r/WorldNews Live Thread: Russian Invasion of Ukraine Day 221, Part 1 (Thread #362)\" submitted on 2022-10-02 04:02:19",
+            "schema": {
+                "fields": [
+                    {
+                        "name": "author",
+                        "description": "A hashed version of the poster's username",
+                        "type": "string"
+                    },
+                    {
+                        "name": "submission_id",
+                        "description": "A string identifier of the thread",
+                        "type": "string"
+                    },
+                    {
+                        "name": "id",
+                        "description": "A string identifier of the comment",
+                        "type": "string"
+                    },
+                    {
+                        "name": "body",
+                        "description": "The comment's content",
+                        "type": "string"
+                    },
+                    {
+                        "name": "edited",
+                        "description": "A flag that specifies if the comment has been edited \u2013 contains a timestamp if it has",
+                        "type": "string"
+                    },
+                    {
+                        "name": "created_utc",
+                        "description": "An epoch timestamp of when the comment was posted",
+                        "type": "number"
+                    },
+                    {
+                        "name": "link_id",
+                        "description": "A string identifier of the thread",
+                        "type": "string"
+                    },
+                    {
+                        "name": "parent_id",
+                        "description": "A string identifier of the parent comment",
+                        "type": "string"
+                    },
+                    {
+                        "name": "distinguished",
+                        "description": "A flag that specifies if the comment was made by a moderator on duty",
+                        "type": "string"
+                    },
+                    {
+                        "name": "depth",
+                        "description": "The overall depth of the comment tree",
+                        "type": "number"
+                    },
+                    {
+                        "name": "ups",
+                        "description": "The score of a comment (ups-downs)",
+                        "type": "number"
+                    },
+                    {
+                        "name": "downs",
+                        "description": "As of now, this column is always 0",
+                        "type": "number"
+                    },
+                    {
+                        "name": "score",
+                        "description": "The score of a comment (ups-downs)",
+                        "type": "number"
+                    },
+                    {
+                        "name": "total_awards_received",
+                        "description": "The number of awards received by a comment",
+                        "type": "number"
+                    },
+                    {
+                        "name": "gilded",
+                        "description": "Whether the comment has been gilded",
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "gildings",
+                        "description": "The gildings received by a comment, if any",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "path": "comments/comments__xu8xz4.csv",
+            "description": "Comments submitted to the thread: (xu8xz4) \"/r/WorldNews Live Thread: Russian Invasion of Ukraine Day 222, Part 1 (Thread #363)\" submitted on 2022-10-03 04:01:58",
             "schema": {
                 "fields": [
                     {
