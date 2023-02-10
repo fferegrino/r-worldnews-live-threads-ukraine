@@ -169,16 +169,29 @@ for post in subs:
 live_threads = pd.DataFrame(submissions, columns=["author"] + properties)
 
 live_threads["created_at"] = pd.to_datetime(live_threads["created_utc"], unit="s", origin="unix")
+live_threads['updated_on'] = pd.to_datetime(datetime.utcnow())
 live_threads["author"] = live_threads["author"].apply(hash_string)
 
+# %% [markdown]
+# ### Load old information from disk and merge
+
+# %%
+old_information = pd.read_csv('data/threads.csv', parse_dates=['created_at', 'updated_on'])
+
+# %%
+merged_data = old_information.set_index('id').combine_first(live_threads.set_index('id')).reset_index()
+
+# %%
 ordered_columns = [
     "id", "name", "author", 
     "title", "created_utc", "created_at", 
     "num_comments", "score", 
-    "upvote_ratio", "permalink"
+    "upvote_ratio", "permalink",
+    "updated_on"
 ]
 
-live_threads[ordered_columns].sort_values("created_utc", ascending=True).to_csv("data/threads.csv", index=False)
+merged_data['updated_on'] = merged_data['updated_on'].dt.round(freq='S')
+merged_data[ordered_columns].sort_values("created_utc", ascending=True).to_csv("data/threads.csv", index=False)
 
 # %% [markdown]
 # ## Downloading ALL the comments for a ALL threads
