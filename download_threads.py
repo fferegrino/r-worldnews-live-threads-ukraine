@@ -179,7 +179,7 @@ live_threads["author"] = live_threads["author"].apply(hash_string)
 old_information = pd.read_csv('data/threads.csv', parse_dates=['created_at', 'updated_on'])
 
 # %%
-merged_data = old_information.set_index('id').combine_first(live_threads.set_index('id')).reset_index()
+merged_data = live_threads.set_index('id').combine_first(old_information.set_index('id')).reset_index()
 
 # %%
 ordered_columns = [
